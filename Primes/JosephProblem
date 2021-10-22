@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+struct table
+{
+    int num;
+    struct table *next;
+};
+ 
+void create(struct table **);
+void display(struct table *);
+int survivor(struct table **, int);
+ 
+int main()
+{
+    struct table *head = NULL;
+    int survive, skip;
+ 
+    create(&head);
+    printf("The persons in circular list are:\n");
+    display(head);
+    printf("Enter the number of persons to be skipped: ");
+    scanf("%d", &skip);
+    survive = survivor(&head, skip);
+    printf("The person to survive is : %d\n", survive);
+    free(head);
+ 
+    return 0;
+}
+ 
+int survivor(struct table **head, int k)
+{
+    struct table *p, *q;
+    int i;
+ 
+    q = p = *head;
+    while (p->next != p)
+    {
+        for (i = 0; i < k - 1; i++)
+        {
+            q = p;
+            p = p->next;
+        }
+        q->next = p->next;
+        printf("%d died\n", p->num);
+        free(p);
+        p = q->next;
+    }
+    *head = p;
+ 
+    return (p->num);
+}
+ 
+void create (struct table **head)
+{
+    struct table *temp, *rear;
+   	printf("Enter -1 to exit\n");
+    int a;
+    do
+    {
+        printf("Enter a number:");
+        scanf("%d", &a);
+        if(a==-1)
+        break;
+        temp = (struct table *)malloc(sizeof(struct table));
+        temp->num = a;
+        temp->next = NULL;
+        if (*head == NULL)
+        {
+            *head = temp;
+        }
+        else
+        {
+            rear->next = temp;
+        }
+        rear = temp;
+    } while (a != -1);
+    rear->next = *head;
+}
+ 
+void display(struct table *head)
+{
+    struct table *temp;
+ 
+    temp = head;
+    printf("%d   ", temp->num);
+    temp = temp->next;
+    while (head != temp)
+    {
+        printf("%d   ", temp->num);
+        temp = temp->next;
+    }
+    printf("\n");
+}
